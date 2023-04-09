@@ -1,1 +1,89 @@
+GPT response-1
+=================================================================================
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv3D, MaxPooling3D, Flatten, Dense
+
+# Define the input shape of the videos
+input_shape = (None, 224, 224, 3)
+
+# Create the model
+model = Sequential()
+
+# Add 3D convolution layers
+model.add(Conv3D(filters=64, kernel_size=(3, 3, 3), activation='relu', input_shape=input_shape))
+model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(Conv3D(filters=128, kernel_size=(3, 3, 3), activation='relu'))
+model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(Conv3D(filters=256, kernel_size=(3, 3, 3), activation='relu'))
+model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+
+# Flatten the output of the convolutional layers
+model.add(Flatten())
+
+# Add fully connected layers
+model.add(Dense(units=1024, activation='relu'))
+model.add(Dense(units=512, activation='relu'))
+model.add(Dense(units=1, activation='sigmoid'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Train the model
+model.fit(train_videos, train_labels, epochs=10, validation_data=(val_videos, val_labels))
+
+=============================================================================================================
+GPT response 2
+===============================================================================================
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers, models
+
+# Define the input shape
+input_shape = (None, 128, 128, 3)  # (frames, height, width, channels)
+
+# Define the model
+model = models.Sequential()
+
+# First convolutional layer
+model.add(layers.Conv3D(32, kernel_size=(3, 3, 3), activation="relu", input_shape=input_shape))
+model.add(layers.MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(layers.BatchNormalization())
+
+# Second convolutional layer
+model.add(layers.Conv3D(64, kernel_size=(3, 3, 3), activation="relu"))
+model.add(layers.MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(layers.BatchNormalization())
+
+# Third convolutional layer
+model.add(layers.Conv3D(128, kernel_size=(3, 3, 3), activation="relu"))
+model.add(layers.MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(layers.BatchNormalization())
+
+# Fourth convolutional layer
+model.add(layers.Conv3D(256, kernel_size=(3, 3, 3), activation="relu"))
+model.add(layers.MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(layers.BatchNormalization())
+
+# Flatten the output of the final convolutional layer
+model.add(layers.Flatten())
+
+# Add a dense layer with 512 units and a ReLU activation
+model.add(layers.Dense(512, activation="relu"))
+
+# Add the output layer with softmax activation
+model.add(layers.Dense(num_classes, activation="softmax"))
+
+# Compile the model
+model.compile(optimizer=tf.keras.optimizers.Adam(),
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+              metrics=["accuracy"])
+
+# Train the model
+model.fit(train_data, epochs=num_epochs, validation_data=val_data)
+
+
+
+Here, train_data and val_data are the training and validation datasets, respectively. num_epochs is the number of training epochs, and num_classes is the number of classes in the dataset.
+
+Note that the input shape of the model is (None, 128, 128, 3), where None represents the variable number of frames in each video. You can adjust the input shape to match the shape of your own videos
 
