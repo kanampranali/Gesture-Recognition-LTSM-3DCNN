@@ -87,3 +87,92 @@ Here, train_data and val_data are the training and validation datasets, respecti
 
 Note that the input shape of the model is (None, 128, 128, 3), where None represents the variable number of frames in each video. You can adjust the input shape to match the shape of your own videos
 
+==================================================================================================================================================================================
+GPT Resonse 3
+=================================================================================================================
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
+from tensorflow.keras.layers import Conv3D, MaxPooling3D
+
+# Set input shape and number of classes
+input_shape = (32, 64, 64, 3)  # (frames, height, width, channels)
+num_classes = 10
+
+# Define model architecture
+model = Sequential()
+model.add(Conv3D(32, kernel_size=(3, 3, 3), activation='relu', input_shape=input_shape))
+model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(Conv3D(64, kernel_size=(3, 3, 3), activation='relu'))
+model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(Conv3D(128, kernel_size=(3, 3, 3), activation='relu'))
+model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+model.add(Flatten())
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(num_classes, activation='softmax'))
+
+# Compile model with chosen optimizer and loss function
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model on a dataset of videos
+model.fit(x=train_data, y=train_labels, batch_size=16, epochs=10, validation_data=(val_data, val_labels))
+
+#######
+Here, train_data and val_data are numpy arrays of shape (num_samples, frames, height, width, channels) containing the training and validation videos, respectively, and train_labels and val_labels are numpy arrays of shape (num_samples, num_classes) containing the corresponding labels.
+
+Note that this is just an example and the model architecture and training parameters can be adjusted as needed depending on the specific video dataset and task. Additionally, preprocessing steps such as resizing, normalization, and data augmentation may also be necessary to improve performance.
+######
+========================================================================================================================================================================================================================
+GPT Response 4
+===============================================================================================================================================
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv3D, MaxPool3D
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.utils import to_categorical
+
+# Set up the hyperparameters
+batch_size = 32
+epochs = 10
+learning_rate = 0.001
+num_classes = 5
+
+# Define the model architecture
+model = Sequential()
+model.add(Conv3D(32, kernel_size=(3, 3, 3), activation='relu', input_shape=(frames, height, width, channels)))
+model.add(MaxPool3D(pool_size=(2, 2, 2)))
+model.add(Conv3D(64, kernel_size=(3, 3, 3), activation='relu'))
+model.add(MaxPool3D(pool_size=(2, 2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(num_classes, activation='softmax'))
+
+# Compile the model with the optimizer, loss function, and metrics
+opt = Adam(lr=learning_rate)
+model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Define the checkpoints to save the model weights during training
+checkpoint = ModelCheckpoint('3dcnn_weights.h5', save_best_only=True, save_weights_only=True)
+
+# Train the model
+model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test), callbacks=[checkpoint])
+
+# Evaluate the model on the test set
+test_loss, test_acc = model.evaluate(x_test, y_test)
+print('Test accuracy:', test_acc)
+
+# Make predictions on new videos
+predictions = model.predict(new_videos)
+
+
+##################
+Here, frames, height, width, and channels refer to the dimensions of each video frame. x_train and x_test are the training and test video data, respectively, in the shape of (num_samples, frames, height, width, channels), and y_train and y_test are their corresponding labels in categorical format. new_videos are the new videos you want to classify, also in the shape of (num_samples, frames, height, width, channels).
+
+Note that this is just a simple example to get you started with 3DCNNs for video classification, and you may need to modify the architecture, hyperparameters, and data preprocessing to suit your specific needs.
+############
++++==========================================================================================================================================
+GPT resopnse 4
++++++++++++++++++++++++++++++++++++++++++++++++++++++
